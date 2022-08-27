@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<title>登录</title>
+</head>
+<body>
+<div class="nk-container">
+	<!-- 内容 -->
+	<div class="main">
+		<div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
+			<h3 class="text-center text-info border-bottom pb-3">账&nbsp;&nbsp;号&nbsp;&nbsp;设&nbsp;&nbsp;置</h3>
+			<form class="mt-5" method="post" th:action="@{/setting}">
+				<div class="form-group row">
+					<label for="name" class="col-sm-2 col-form-label text-right">姓名:</label>
+					<div class="col-sm-10">
+						<input type="text" th:class="form-control" id="name" name="name" th:value="${director.name}" required onkeyup="checkObject.checkName(this.value)">
+					</div>
+					<div id="director_name" class="modify_warn" style="display: none;"></div>
+				</div>
+				<div class="form-group row">
+					<label for="phone" class="col-sm-2 col-form-label text-right">手机号:</label>
+					<div class="col-sm-10">
+						<input type="text" th:class="form-control" id="phone" name="phone" th:value="${director.phone}" required onkeyup="checkObject.checkPhone(this.value)">
+					</div>
+					<div id="director_phone" class="modify_warn" style="display: none;"></div>
+				</div>
+				<div class="form-group row">
+					<label for="email" class="col-sm-2 col-form-label text-right">邮箱:</label>
+					<div class="col-sm-10">
+						<input type="text" th:class="form-control" id="email" name="email" th:value="${director.email}" required onkeyup="checkObject.checkEmail(this.value)">
+					</div>
+					<div id="director_email" class="modify_warn" style="display: none;"></div>
+				</div>
+				<!-- <div class="form-group row mt-4">
+                    <label for="verifycode" class="col-sm-2 col-form-label text-right">验证码:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control is-invalid" id="verifycode" placeholder="请输入验证码!">
+                        <div class="invalid-feedback">
+                            验证码不正确!
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <img src="../img/captcha.png" style="width:100px;height:40px;" class="mr-2"/>
+                        <a href="javascript:;" class="font-size-12 align-bottom">刷新验证码</a>
+                    </div>
+                </div>				 -->
+				<!-- <div class="form-group row mt-4">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <input type="checkbox" id="remember-me" checked="checked">
+                        <label class="form-check-label" for="remember-me">记住我</label>
+                        <a href="forget.html" class="text-danger float-right">忘记密码?</a>
+                    </div>
+                </div>				 -->
+				<div class="form-group row mt-4">
+					<div class="col-sm-2"></div>
+					<div class="col-sm-5 text-center">
+						<!-- <input type="submit" class="btn btn-info text-white form-control" id="fix" onkeyup="confirm()" value="确认修改"></input> -->
+						<button type="submit" class="btn btn-info text-white form-control" id="fix">确认修改</button>
+					</div>
+					<div class="col-sm-5 text-center">
+						<button type="button" class="btn btn-info text-white form-control" id="cancel" onclick="javascript:history.go(-1)">取&nbsp;&nbsp;消</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	// var num=document.getElementById("phone").getAttribute("value").length;
+	// var phone=document.getElementById("phone");
+	// var but=document.getElementById("fix");
+	// phone.addEventListener("blur",tan);
+	// function tan(){
+	// 	console.log(this.value.length);
+	// 	if(this.value.length!=11){
+	// 		alert("手机号必须为11位！！");
+	// 		but.setAttribute("type","button");
+	// 	}
+	// 	else{
+	// 		but.setAttribute("type","submit");
+	// 	}
+	// }
+	var flag_name = false;
+	var flag_phone = false;
+	var flag_eamil = false;
+	var checkObject = {
+		checkName: function (value) {
+			if(value == ""){
+				$("#director_name").attr("style","display: inline; color: red; margin-left: 120px; margin-top: 12px;");
+				$("#director_name").html("*姓名不能为空");
+				$("#fix").attr("disabled",true);
+			} else{
+				$("#director_name").attr("style", "display:none");
+            	$("#fix").attr('disabled',false);
+				// flag_name = true;
+			}
+		},
+		checkPhone: function (value) {
+			var p = new RegExp(/^1[34578]\d{9}$/);
+			if(value == ""){
+				$("#director_phone").attr("style","display: inline; color: red; margin-left: 120px; margin-top: 12px;");
+				$("#director_phone").html("*手机号不能为空！");
+				$("#fix").attr('disabled',true);
+			}else if(!value.match(p)){
+				$("#director_phone").attr("style","display: inline; color: red; margin-left: 120px; margin-top: 12px;");
+				$("#director_phone").html("*手机号有误！"); //手机号格式验证
+				$("#fix").attr('disabled',true);
+			}else{
+				$("#director_phone").attr("style", "display:none");
+				$("#fix").attr('disabled',false);
+				// flag_phone = true;
+			}
+		},
+		checkEmail: function (value) {
+			var re=new RegExp(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/);
+			if(value == ""){
+				$("#director_email").attr("style","display: inline; color: red; margin-left: 120px; margin-top: 12px;");
+				$("#director_email").html("*邮箱不能为空！");
+				$("#fix").attr('disabled',true);
+			} else if(!value.match(re)){
+				$("#director_email").attr("style","display: inline; color: red; margin-left: 120px; margin-top: 12px;");
+				$("#director_email").html("*邮箱格式不正确！");
+				$("#fix").attr('disabled',true);
+			} else{
+				$("#director_email").attr("style", "display:none");
+				$("#fix").attr('disabled',false);
+				// flag_eamil = true;
+			}
+		},
+	};
+	function confirm () {
+		if(flag_name == true && flag_phone == true && flag_eamil == true){
+			$("#fix").attr('disabled',"true");
+		} else{
+			$("#fix").attr('disabled',"false");
+		}
+	};
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="../js/global.js"></script>
+</body>
+</html>
